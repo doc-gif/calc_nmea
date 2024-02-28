@@ -38,7 +38,10 @@ for row in GxRMC:
             result.append(datetime.time(hour=time.hour, minute=time.minute, second=time.second))
         # 緯度　ddmm.mmmmmmm
         if (i == 3):
-            latitude = float(data[3]) / 100
+            degree = math.floor(float(data[3]) / 100)
+            minute1 = float(data[3]) - degree * 100
+            minute2 = minute1 / 60
+            latitude = degree + minute2
             result.append(latitude)
         # 南北 N=北緯, S=南緯
         if (i == 4):
@@ -46,7 +49,10 @@ for row in GxRMC:
                 result[1] *= -1
         # 経度 dddmm.mmmmmmm
         if (i == 5):
-            longitude = float(data[5]) / 100
+            degree = math.floor(float(data[5]) / 100)
+            minute1 = float(data[5]) - degree * 100
+            minute2 = minute1 / 60
+            longitude = degree + minute2
             result.append(longitude)
         # 東西 E=東経, S=西経
         if (i == 6):
