@@ -1,4 +1,4 @@
-target_filepath = 'actual_route.txt'
+target_filepath = 'data/part2/actual_route.txt'
 output_filepath = target_filepath.split('.')[0] + '_output.txt'
 
 
