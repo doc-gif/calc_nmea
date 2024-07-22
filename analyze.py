@@ -164,11 +164,11 @@ if __name__ == "__main__":
     # 全情報(Excel表示用)
     all_data_filepath = 'all_data.txt'
     # マップ表示用の緯度・経度のファイル
-    lat_lon_filepath = 'data/part2/lat_lon.txt'
+    lat_lon_filepath = 'data/part2/qz1_position_log.txt'
     # 実走行経路のファイル
-    actual_route_filepath = 'data/part2/actual_route.txt'
+    actual_route_filepath = 'data/part2/actual_positions.txt'
     # スマートフォンで測位したデータファイル
-    smart_phone_result_filepath = 'data/part2/position_log_output.txt'
+    smart_phone_result_filepath = 'data/part2/smartphone_position_log_output.txt'
 
     # Message IDの正規表現
     GxGGA_pat = '\$G[A-Z]GGA'

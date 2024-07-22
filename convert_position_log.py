@@ -1,4 +1,4 @@
-target_filepath = 'data/part2/position_log.txt'
+target_filepath = 'data/part1/smartphone_position_log.txt'
 output_filepath = target_filepath.split('.')[0] + '_output' + '.txt'
 
 with open(target_filepath, 'r') as target, open(output_filepath, 'w') as output:

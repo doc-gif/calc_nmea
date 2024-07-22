@@ -1,6 +1,6 @@
 from geopy.distance import geodesic
 
-target_file = 'data/part2/position_log_output.txt'
+target_file = 'data/part2/smartphone_position_log_output.txt'
 point_lat, point_lng = 35.1656003368182, 136.90730356717975
 point = (point_lat, point_lng)
 
