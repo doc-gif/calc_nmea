@@ -125,7 +125,7 @@ if __name__ == "__main__":
     lat_lon_filepath = './lat_lon.txt'
     # 実走行経路のファイル
     actual_route_filepath = 'actual_route.txt'
-    # スマートホンで測位したデータファイル
+    # スマートフォンで測位したデータファイル
     smart_phone_result_filepath = 'position_log_output.txt'
 
     # Message IDの正規表現
@@ -299,7 +299,7 @@ if __name__ == "__main__":
             actual_route.append([float(temp[0]), float(temp[1])])
 
     smart_phone_route = []
-    # スマートホンで測位したデータを配列に格納
+    # スマートフォンで測位したデータを配列に格納
     with open(smart_phone_result_filepath, 'r') as t:
         for line in t.readlines():
             temp = line.split(',')
@@ -334,13 +334,13 @@ if __name__ == "__main__":
     plt.show()
     # スマホのみ
     fig2, ax2 = plt.subplots()
-    ax2.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートホン", color="#ff7f00")
+    ax2.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートフォン", color="#ff7f00")
     ax2.set_xlabel('時間')
     ax2.set_xticks([])
     ax2.set_ylabel('誤差(m)')
     ax2.set_ylim(0, 80)
-    ax2.set_title('スマートホンの距離誤差')
-    ax2.axhline(y=average_of_smart_phone_position_error, color='#00a381', linestyle='--', label="距離誤差平均(スマートホン)")
+    ax2.set_title('スマートフォンの距離誤差')
+    ax2.axhline(y=average_of_smart_phone_position_error, color='#00a381', linestyle='--', label="距離誤差平均(スマートフォン)")
     ax2.grid(which='major', linewidth=0.8)
     ax2.grid(which='minor', linestyle=':', linewidth=0.5)
     ax2.minorticks_on()
@@ -349,14 +349,14 @@ if __name__ == "__main__":
     # QZ1、スマホ
     fig3, ax3 = plt.subplots()
     ax3.plot(time_x, qz1_position_error, label="QZ1(みちびきSLAS)")
-    ax3.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートホン")
+    ax3.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートフォン")
     ax3.set_xlabel('時間')
     ax3.set_xticks([])
     ax3.set_ylabel('誤差(m)')
     ax3.set_ylim(0, 80)
-    ax3.set_title('QZ1、スマートホンの距離誤差')
+    ax3.set_title('QZ1、スマートフォンの距離誤差')
     ax3.axhline(y=average_of_qz1_position_error, color='#d3381c', linestyle='--', label="距離誤差平均(QZ1)")
-    ax3.axhline(y=average_of_smart_phone_position_error, color='#00a381', linestyle='--', label="距離誤差平均(スマートホン)")
+    ax3.axhline(y=average_of_smart_phone_position_error, color='#00a381', linestyle='--', label="距離誤差平均(スマートフォン)")
     ax3.grid(which='major', linewidth=0.8)
     ax3.grid(which='minor', linestyle=':', linewidth=0.5)
     ax3.minorticks_on()
@@ -447,7 +447,7 @@ if __name__ == "__main__":
     # 位置情報誤差の分布
     # QZ1
     df_qz1_position_error = pd.Series(qz1_position_error, name='df_qz1_position_error')
-    qz1_bins = np.linspace(0, 100, 25)
+    qz1_bins = np.linspace(0, 100, 26)
     qz1_freq = df_qz1_position_error.value_counts(bins=qz1_bins, sort=False)
     qz1_class_value = (qz1_bins[:-1] + qz1_bins[1:]) / 2  # 階級値
     qz1_rel_freq = qz1_freq / df_qz1_position_error.count()  # 相対度数
@@ -469,6 +469,7 @@ if __name__ == "__main__":
     ax9 = ax8.twinx()
     ax9.plot(np.arange(len(qz1_dist)), qz1_dist["相対累積度数"], "--o", color="k")
     ax9.set_ylabel("累積相対度数")
+    ax9.set_ylim(0, )
     plt.show()
     # スマホ
     df_smart_phone_position_error = pd.Series(smart_phone_position_error, name='df_smart_phone_position_error')
@@ -495,4 +496,5 @@ if __name__ == "__main__":
     ax11 = ax10.twinx()
     ax11.plot(np.arange(len(smart_phone_dist)), smart_phone_dist["相対累積度数"], "--o", color="k")
     ax11.set_ylabel("累積相対度数")
+    ax11.set_ylim(0, )
     plt.show()
