@@ -69,7 +69,7 @@ def float_wrap_nan_data(t):
         return float(t)
 
 
-def add_annotation(ax, y1, y2, label, color):
+def add_left_side_annotation(ax, y1, y2, label, color):
     x1 = 1600
     x2 = 1650
 
@@ -79,6 +79,48 @@ def add_annotation(ax, y1, y2, label, color):
 
     center = (y1 + y2) / 2
     ax.text(x2 + 70, center, label, ha="center", va="top")
+
+
+def add_bottom_side_annotation(ax, x, y_min, y_max, label, color):
+    y1 = y_min - 0.0117 * (y_max - y_min)
+    y2 = y_min - 0.027 * (y_max - y_min)
+    text_y = y_min - 0.028 * (y_max - y_min)
+
+    xs = [x+10, x-10, x, x+10]
+    ys = [y2, y2, y1, y2]
+    ax.plot(xs, ys, clip_on=False, color=color)
+
+    ax.text(x, text_y, label, ha="left", va="top", fontsize=8, rotation=335)
+
+
+def add_dashed_vertical_line(ax, x, color):
+    ax.axvline(x, linestyle='--', color=color, lw=0.3)
+
+
+def add_position_annotation(ax, fig, y_min, y_max):
+    qz1_color = "y"
+    smart_phone_color = "r"
+    # QZ1、スマホで誤差が大きかった場所
+    add_bottom_side_annotation(ax, 183, y_min, y_max, "桜通×本町通", qz1_color)
+    add_dashed_vertical_line(ax, 183, qz1_color)
+    add_bottom_side_annotation(ax, 479, y_min, y_max, "大津通×本重町通", qz1_color)
+    add_dashed_vertical_line(ax, 479, qz1_color)
+    add_bottom_side_annotation(ax, 609, y_min, y_max, "大津通 松坂屋前", qz1_color)
+    add_dashed_vertical_line(ax, 609, qz1_color)
+    add_bottom_side_annotation(ax, 879, y_min, y_max, "本町通", qz1_color)
+    add_dashed_vertical_line(ax, 879, qz1_color)
+
+    # スマホのみ誤差が大きかった場所
+    add_bottom_side_annotation(ax, 765, y_min, y_max, "㈱宮田精肉店 本店前", smart_phone_color)
+    add_dashed_vertical_line(ax, 765, smart_phone_color)
+    add_bottom_side_annotation(ax, 1065, y_min, y_max, "広小路通×本町通", smart_phone_color)
+    add_dashed_vertical_line(ax, 1065, smart_phone_color)
+    add_bottom_side_annotation(ax, 1222, y_min, y_max, "広小路通×長者町繊維街 入口", smart_phone_color)
+    add_dashed_vertical_line(ax, 1222, smart_phone_color)
+    add_bottom_side_annotation(ax, 1313, y_min, y_max, "三井住友銀行前", smart_phone_color)
+    add_dashed_vertical_line(ax, 1313, smart_phone_color)
+
+    fig.subplots_adjust(left=0.1, right=0.95, bottom=0.17, top=0.9)
 
 
 def find_nearest_points(t, r):
@@ -122,7 +164,7 @@ if __name__ == "__main__":
     # 全情報(Excel表示用)
     all_data_filepath = 'all_data.txt'
     # マップ表示用の緯度・経度のファイル
-    lat_lon_filepath = './lat_lon.txt'
+    lat_lon_filepath = 'lat_lon.txt'
     # 実走行経路のファイル
     actual_route_filepath = 'actual_route.txt'
     # スマートフォンで測位したデータファイル
@@ -321,7 +363,6 @@ if __name__ == "__main__":
     # QZ1のみ
     fig1, ax1 = plt.subplots()
     ax1.plot(time_x, qz1_position_error, label="QZ1(みちびきSLAS)")
-    ax1.set_xlabel('時間')
     ax1.set_xticks([])
     ax1.set_ylabel('誤差(m)')
     ax1.set_ylim(0, 80)
@@ -331,11 +372,12 @@ if __name__ == "__main__":
     ax1.grid(which='minor', linestyle=':', linewidth=0.5)
     ax1.minorticks_on()
     ax1.legend()
+    add_position_annotation(ax1, fig1, 0, 80)
+    plt.savefig('qz1_distance_error.png', dpi=600)
     plt.show()
     # スマホのみ
     fig2, ax2 = plt.subplots()
     ax2.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートフォン", color="#ff7f00")
-    ax2.set_xlabel('時間')
     ax2.set_xticks([])
     ax2.set_ylabel('誤差(m)')
     ax2.set_ylim(0, 80)
@@ -345,12 +387,13 @@ if __name__ == "__main__":
     ax2.grid(which='minor', linestyle=':', linewidth=0.5)
     ax2.minorticks_on()
     ax2.legend()
+    add_position_annotation(ax2, fig2, 0, 80)
+    plt.savefig('smartphone_distance_error.png', dpi=600)
     plt.show()
     # QZ1、スマホ
     fig3, ax3 = plt.subplots()
     ax3.plot(time_x, qz1_position_error, label="QZ1(みちびきSLAS)")
     ax3.plot(range(len(smart_phone_position_error)), smart_phone_position_error, label="スマートフォン")
-    ax3.set_xlabel('時間')
     ax3.set_xticks([])
     ax3.set_ylabel('誤差(m)')
     ax3.set_ylim(0, 80)
@@ -361,6 +404,8 @@ if __name__ == "__main__":
     ax3.grid(which='minor', linestyle=':', linewidth=0.5)
     ax3.minorticks_on()
     ax3.legend()
+    add_position_annotation(ax3, fig3, 0, 80)
+    plt.savefig('qz1_and_smartphone_distance_error.png', dpi=600)
     plt.show()
 
     # 可視衛星数のグラフ表示
@@ -370,7 +415,6 @@ if __name__ == "__main__":
     average_of_number_of_visible_satellite = sum(number_of_visible_satellite_y) / len(number_of_visible_satellite_y)
     print("可視衛星数平均：" + str(average_of_number_of_visible_satellite))
     ax4.plot(time_x, number_of_visible_satellite_y)
-    ax4.set_xlabel('時間')
     ax4.set_xticks([])
     ax4.set_ylim(0, 20)
     ax4.set_yticks(np.arange(0, 20, 5))
@@ -380,6 +424,8 @@ if __name__ == "__main__":
     ax4.grid(which='major', linewidth=0.8)
     ax4.grid(which='minor', linestyle=':', linewidth=0.5)
     ax4.minorticks_on()
+    add_position_annotation(ax4, fig4, 0, 20)
+    plt.savefig('qz1_number_of_visible_satellite.png', dpi=600)
     plt.show()
     # 使用衛星数のグラフ表示
     fig5, ax5 = plt.subplots()
@@ -388,7 +434,6 @@ if __name__ == "__main__":
     average_of_number_of_used_satellite = sum(number_of_used_satellite_y) / len(number_of_used_satellite_y)
     print("使用衛星数平均：" + str(average_of_number_of_used_satellite))
     ax5.plot(time_x, number_of_used_satellite_y)
-    ax5.set_xlabel('時間')
     ax5.set_xticks([])
     ax5.set_ylim(0, 13)
     ax5.set_yticks(np.arange(0, 13, 5))
@@ -398,6 +443,8 @@ if __name__ == "__main__":
     ax5.grid(which='major', linewidth=0.8)
     ax5.grid(which='minor', linestyle=':', linewidth=0.5)
     ax5.minorticks_on()
+    add_position_annotation(ax5, fig5, 0, 13)
+    plt.savefig('qz1_number_of_used_satellite.png', dpi=600)
     plt.show()
     # HDOPのグラフ表示
     fig6, ax6 = plt.subplots()
@@ -406,7 +453,6 @@ if __name__ == "__main__":
     average_of_hdop = sum(hdop_y) / len(hdop_y)
     print("HDOP値平均：" + str(average_of_hdop))
     ax6.plot(time_x, hdop_y)
-    ax6.set_xlabel('時間')
     ax6.set_xticks([])
     ax6.set_xlim(0, 1570)
     ax6.set_ylabel('hdop')
@@ -419,9 +465,12 @@ if __name__ == "__main__":
     ax6.axhline(y=2, color="g", linestyle="--")  # Excellent
     ax6.axhline(y=5, color="y", linestyle="--")  # Good
     ax6.axhline(y=average_of_hdop, color="r")
-    add_annotation(ax6, 0.7, 0.95, '理想', 'b')
-    add_annotation(ax6, 1.05, 1.95, '優良', 'g')
-    add_annotation(ax6, 2.05, 4.95, '良', 'y')
+    add_left_side_annotation(ax6, 0.7, 0.95, '理想', 'b')
+    add_left_side_annotation(ax6, 1.05, 1.95, '優良', 'g')
+    add_left_side_annotation(ax6, 2.05, 4.95, '良', 'y')
+    add_position_annotation(ax6, fig6, 0.7, 5.2)
+    fig6.subplots_adjust(left=0.125, right=0.9)
+    plt.savefig('qz1_hdop.png', dpi=600)
     plt.show()
 
     # 測位ステータスのグラフ表示
@@ -429,7 +478,6 @@ if __name__ == "__main__":
     positioning_status_y = [item[1] for item in positioning_status]
     ax7.plot(range(len(positioning_status_y)), positioning_status_y)
     ax7.set_xticks([])
-    ax7.set_xlabel('時間')
     ax7.set_xlim(0, 1570)
     ax7.set_ylim(-0.2, 2.2)
     ax7.set_yticks(np.arange(0, 2.2, 1))
@@ -442,6 +490,9 @@ if __name__ == "__main__":
     ax7.text(1600, 0.9, "単独測位")
     ax7.plot([1600, 1650], [2, 2], clip_on=False, color="g")
     ax7.text(1600, 1.9, "DGPS")
+    add_position_annotation(ax7, fig7, -0.2, 2.2)
+    fig7.subplots_adjust(left=0.125, right=0.9)
+    plt.savefig('qz1_positioning_satus.png', dpi=600)
     plt.show()
 
     # 位置情報誤差の分布
@@ -470,10 +521,11 @@ if __name__ == "__main__":
     ax9.plot(np.arange(len(qz1_dist)), qz1_dist["相対累積度数"], "--o", color="k")
     ax9.set_ylabel("累積相対度数")
     ax9.set_ylim(0, )
+    plt.savefig('qz1_distance_error_frequency.png', dpi=600)
     plt.show()
     # スマホ
     df_smart_phone_position_error = pd.Series(smart_phone_position_error, name='df_smart_phone_position_error')
-    smart_phone_bins = np.linspace(0, 100, 25)
+    smart_phone_bins = np.linspace(0, 100, 26)
     smart_phone_freq = df_smart_phone_position_error.value_counts(bins=smart_phone_bins, sort=False)
     smart_phone_class_value = (smart_phone_bins[:-1] + smart_phone_bins[1:]) / 2  # 階級値
     smart_phone_rel_freq = smart_phone_freq / df_smart_phone_position_error.count()  # 相対度数
@@ -497,4 +549,5 @@ if __name__ == "__main__":
     ax11.plot(np.arange(len(smart_phone_dist)), smart_phone_dist["相対累積度数"], "--o", color="k")
     ax11.set_ylabel("累積相対度数")
     ax11.set_ylim(0, )
+    plt.savefig('smartphone_distance_error_frequency.png', dpi=600)
     plt.show()
